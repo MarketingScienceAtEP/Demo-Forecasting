@@ -191,7 +191,7 @@ def add_actual_forecast_traces(fig, x_actual, y_actual, x_fc, y_fc, actual_name=
 
 def page_main(df, hist_end):
     st.title("Forecasting Solutions — Demo Dashboard")
-    st.caption("Category: Chocolate | Frequency: Monthly | Historical data: 2020–2025 | Forecast: 2026–2028")
+    st.caption("Category: ABC | Frequency: Monthly | Historical data: 2020–2025 | Forecast: 2026–2028")
 
     hist = df[df["date"] <= hist_end]
     fc = df[df["date"] > hist_end]
@@ -207,21 +207,21 @@ def page_main(df, hist_end):
     fig1.add_vline(x=hist_end, line_width=1, line_dash="dot", line_color="gray")
     fig1.add_annotation(x=hist_end, y=float(df["category_value"].max()) * 1.03, text="Forecast starts", showarrow=False, font=dict(color="gray"))
     fmt_axis(fig1, "Category value (€)")
-    fig1.update_layout(title="1. Chocolate category value — actuals vs forecast")
+    fig1.update_layout(title="1. TOTAL VALUE")
     st.plotly_chart(fig1, use_container_width=True)
 
     fig2 = go.Figure()
     add_actual_forecast_traces(fig2, hist["date"], hist["category_volume"], fc["date"], fc["category_volume"])
     fig2.add_vline(x=hist_end, line_width=1, line_dash="dot", line_color="gray")
     fmt_axis(fig2, "Category volume (units)")
-    fig2.update_layout(title="2. Chocolate category volume — actuals vs forecast")
+    fig2.update_layout(title="2. TOTAL VOLUME")
     st.plotly_chart(fig2, use_container_width=True)
 
 
 
 def page_decomposition(df, hist_end):
     st.title("Forecast Decomposition")
-    st.caption("Available data and forecast for Chocolate category value, with driver decomposition for forecast months.")
+    st.caption("Available data and forecast for ABC category value, with driver decomposition for forecast months.")
 
     hist = df[df["date"] <= hist_end]
     fc = df[df["date"] > hist_end].copy()
@@ -230,7 +230,7 @@ def page_decomposition(df, hist_end):
     add_actual_forecast_traces(fig1, hist["date"], hist["category_value"], fc["date"], fc["category_value"])
     fig1.add_vline(x=hist_end, line_width=1, line_dash="dot", line_color="gray")
     fmt_axis(fig1, "Category value (€)")
-    fig1.update_layout(title="3A. Chocolate category value — actuals vs forecast")
+    fig1.update_layout(title="3A. TOTAL CATEGORY VALUE)
     st.plotly_chart(fig1, use_container_width=True)
 
     fig2 = go.Figure()
@@ -300,8 +300,8 @@ def page_hierarchy(df, hist_end):
         shared_xaxes=True,
         vertical_spacing=0.10,
         subplot_titles=(
-            "Top panel: Total brand value (XYZ)",
-            f"Bottom panel: Decomposition by {split_choice.lower()}",
+            "Total brand value (XYZ)",
+            f"Decomposition by {split_choice.lower()}",
         ),
     )
 
