@@ -360,9 +360,11 @@ def page_scenarios(df, scenarios, hist_end):
     st.caption("Compare alternative forward-looking environments for Category ABC value.")
 
     hist = df[df["date"] <= hist_end]
+
+    scenario_options = ["Scenario 1 Forecast", "Scenario 2 Forecast", "Scenario 3 Forecast", "All Scenarios"]
     scenario = st.selectbox(
         "Select scenario",
-        ["Scenario 1 Forecast", "Scenario 2 Forecast", "Scenario 3 Forecast"],
+        scenario_options,
         index=1,
     )
 
@@ -371,7 +373,9 @@ def page_scenarios(df, scenarios, hist_end):
         "Scenario 2 Forecast": "Base Case",
         "Scenario 3 Forecast": "Low inflationary environment"
     }
-    st.info(descriptions[scenario])
+
+    if scenario != "All Scenarios":
+        st.info(descriptions[scenario])
 
     fig = go.Figure()
     fig.add_trace(
@@ -380,14 +384,38 @@ def page_scenarios(df, scenarios, hist_end):
             line=dict(color="#1f77b4", width=3)
         )
     )
-    fig.add_trace(
-        go.Scatter(
-            x=scenarios["date"], y=scenarios[scenario], mode="lines", name=scenario,
-            line=dict(color="#ff7f0e", width=3, dash="dash")
+
+    scenario_colors = {
+        "Scenario 1 Forecast": "#ff7f0e",
+        "Scenario 2 Forecast": "#2ca02c",
+        "Scenario 3 Forecast": "#d62728"
+    }
+
+    if scenario == "All Scenarios":
+        for scen in ["Scenario 1 Forecast", "Scenario 2 Forecast", "Scenario 3 Forecast"]:
+            fig.add_trace(
+                go.Scatter(
+                    x=scenarios["date"], y=scenarios[scen], mode="lines", name=scen,
+                    line=dict(color=scenario_colors[scen], width=3, dash="dash")
+                )
+            )
+        max_y = max([
+            hist["category_value"].max(),
+            scenarios["Scenario 1 Forecast"].max(),
+            scenarios["Scenario 2 Forecast"].max(),
+            scenarios["Scenario 3 Forecast"].max()
+        ])
+    else:
+        fig.add_trace(
+            go.Scatter(
+                x=scenarios["date"], y=scenarios[scenario], mode="lines", name=scenario,
+                line=dict(color=scenario_colors[scenario], width=3, dash="dash")
+            )
         )
-    )
+        max_y = max(hist["category_value"].max(), scenarios[scenario].max())
+
     fig.add_vline(x=hist_end, line_width=1, line_dash="dot", line_color="gray")
-    fig.add_annotation(x=hist_end, y=float(max(hist["category_value"].max(), scenarios[scenario].max())) * 1.03,
+    fig.add_annotation(x=hist_end, y=float(max_y) * 1.03,
                        text="Scenario forecast starts", showarrow=False, font=dict(color="gray"))
     fmt_axis(fig, "Category value (€)")
     fig.update_layout(title="5. Scenario forecasts for Category ABC value")
