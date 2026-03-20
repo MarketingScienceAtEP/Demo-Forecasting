@@ -230,7 +230,7 @@ def page_decomposition(df, hist_end):
     add_actual_forecast_traces(fig1, hist["date"], hist["category_value"], fc["date"], fc["category_value"])
     fig1.add_vline(x=hist_end, line_width=1, line_dash="dot", line_color="gray")
     fmt_axis(fig1, "Category value (€)")
-    fig1.update_layout(title="3A. TOTAL CATEGORY VALUE)
+    fig1.update_layout(title="3A. TOTAL CATEGORY VALUE")
     st.plotly_chart(fig1, use_container_width=True)
 
     fig2 = go.Figure()
